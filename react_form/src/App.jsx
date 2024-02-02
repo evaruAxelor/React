@@ -41,11 +41,11 @@ export default function App() {
     isMail: false,
     isPayroll: false,
     isSelfService: false,
-  }
+  };
 
   const [inputs, dispatch] = useReducer(reducer, initials);
-  
-  const errors = (() => {
+
+  const errors = () => {
     let uName = document.querySelector("#username").value;
     let pass = document.querySelector("#password").value;
 
@@ -54,19 +54,19 @@ export default function App() {
 
     if (uName === "" || uName === " ") {
       document.querySelector("#e1").innerHTML = "Username is required !";
-    }else{
+    } else {
       document.querySelector("#e1").innerHTML = "";
     }
 
     if (pass === "" || pass === " ") {
       document.querySelector("#e2").innerHTML = "Password is required !";
-    } else if(!password) {
+    } else if (!password) {
       document.querySelector("#e2").innerHTML =
         "Password must have 8 characters and at least 1 digit";
-    }else{
+    } else {
       document.querySelector("#e2").innerHTML = "";
     }
-  });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,9 +76,16 @@ export default function App() {
       value: e.target.value,
     });
     errors();
-    if (inputs.username && inputs.password && inputs.city && inputs.webserver && inputs.role) {
+    if (
+      inputs.username &&
+      inputs.password &&
+      inputs.city &&
+      inputs.webserver &&
+      inputs.role
+    ) {
       console.log(inputs);
-      document.querySelector("#success").innerHTML = "Form submitted successfully!!";
+      document.querySelector("#success").innerHTML =
+        "Form submitted successfully!!";
       dispatch({
         type: "CLEAR",
       });
@@ -226,7 +233,12 @@ export default function App() {
                 </button>
               </td>
               <td>
-                <button type="reset" onClick={()=>dispatch({type : "CLEAR"})}>Reset</button>
+                <button
+                  type="reset"
+                  onClick={() => dispatch({ type: "CLEAR" })}
+                >
+                  Reset
+                </button>
               </td>
             </tr>
             <tr>
