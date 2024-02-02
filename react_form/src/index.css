@@ -1,0 +1,20 @@
+.form-container{
+    margin: auto;
+    border: 1px solid black;
+    width: 30%;
+    margin-top: 200px;
+}
+input{
+    margin-bottom: 5px;
+}
+span{
+    color: red;
+    font-size: 10px;
+    margin-left: 3px;
+}
+#success{
+    background-color : #36b35f;
+    width: 100%;
+    color: white;
+    margin-top: 10px;
+}
