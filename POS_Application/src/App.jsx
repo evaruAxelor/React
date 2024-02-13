@@ -1,6 +1,6 @@
 import Aside from "./Components/Aside"
 import CardContainer from "./Components/CardContainer";
-import Nav from "./Components/Navbar";
+import NavBar from "./Components/NavBar";
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
 import { useState } from "react";
@@ -41,7 +41,7 @@ export default function App() {
         </Toast>
       </ToastContainer>
 
-      <Nav />
+      <NavBar />
       <main className="d-flex">
         <CardContainer addToCart={addToCart}/>
         <Aside cartProduct={cartProduct}/>
