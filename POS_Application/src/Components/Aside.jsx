@@ -1,13 +1,13 @@
 import PropTypes from "prop-types"
 import { Alert, Button } from "react-bootstrap";
 
-export function Cart({cartProduct}) { 
+export function Cart({cartProduct, addToCart, removeFromCart}) { 
 
-  const calcTotal = () => {
-    return (
-      cartProduct.reduce((total,item)=>total + item.price,0) 
-    )
-  }
+    const calcTotal = () => {
+      return (
+        cartProduct.reduce((total,item)=>total + item.price * item.quantity,0) 
+      )
+    }
 
   return (
     <>
@@ -16,10 +16,11 @@ export function Cart({cartProduct}) {
           {cartProduct.map((item,index)=>(
               <li key={index} className="d-flex justify-content-between align-items-center list-group-item">
                 <div className="ms-2 me-auto">
-                  <div className="fw-bold">{item.title}</div>₹ {item.price / item.quantity} * {item.quantity}
-                </div>
+                  <div className="fw-bold">{item.title + " / " + " ₹ "+ item.price}</div>
+                  <button className="bg-danger border-0" onClick={()=>removeFromCart(item)}> - </button> &nbsp;&nbsp; {item.quantity} &nbsp;&nbsp; <button className="bg-success border-0" onClick={()=> addToCart(item)}> + </button>
+                </div>  
                 <Button variant="primary" className="badge rounded-pill bg-primary">
-                  {item.price}
+                  {item.price * item.quantity}
                 </Button>
               </li>
           ))}
@@ -38,11 +39,11 @@ export function Cart({cartProduct}) {
 
 }
 
-export default function Aside( { cartProduct }) {
+export default function Aside( { cartProduct, addToCart, removeFromCart }) {
   return (
     <>
     <aside className="col-md-4" style={{ padding:"10px"}}>
-        <Cart cartProduct={cartProduct}  />
+        <Cart cartProduct={cartProduct} addToCart={addToCart} removeFromCart={removeFromCart}/>
     </aside>
     </>
   )
@@ -50,9 +51,13 @@ export default function Aside( { cartProduct }) {
 
 Cart.propTypes = {
   cartProduct : PropTypes.array,
-  setCartProduct : PropTypes.func
+  setCartProduct : PropTypes.func,
+  addToCart : PropTypes.any,
+  removeFromCart : PropTypes.any
 }
 Aside.propTypes = {
   cartProduct : PropTypes.array  ,
   setCartProduct : PropTypes.func,
+  addToCart : PropTypes.any,
+  removeFromCart : PropTypes.any
 }
