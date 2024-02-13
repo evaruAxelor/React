@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import { NavDropdown } from 'react-bootstrap';
 import PropTypes from "prop-types"
 
-export default function NavBar() {
+export default function NavBar({handleSelect, handleSort}) {
   return (
     <>
       <Navbar bg="dark" data-bs-theme="dark">

@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
-import data from './Data.js'
-import { Dropdown, Card, Button } from 'react-bootstrap'
-import { useState } from 'react';
+import { Card, Button } from 'react-bootstrap'
 
 export function Cards({ link, title, price, addToCart}) {
 
@@ -21,55 +19,10 @@ export function Cards({ link, title, price, addToCart}) {
   );
 }
 
-export default function CardContainer({addToCart}) {
-
-  const [productType, setProductType] = useState("all");
-  const [sortedItems, setSortedItems] = useState([...data.productData]);
-
-  const sortItems = (eventKey) => {
-    let sortedItemsCopy = [...sortedItems];
-    if (eventKey === "A-Z") {
-      sortedItemsCopy.sort((a, b) => a.title > b.title ? 1 : -1);
-    }else if (eventKey === "Z-A"){
-      sortedItemsCopy.sort((a, b) => a.title > b.title ? -1 : 1);
-    }else if (eventKey === "price_asc") {
-      sortedItemsCopy.sort((a, b) => a.price - b.price);
-    } else if (eventKey === "price_desc") {
-      sortedItemsCopy.sort((a, b) => b.price - a.price);
-    }
-    setSortedItems(sortedItemsCopy);
-  };
-
-  const handleSelect=(eventKey)=>{
-     setProductType(eventKey)
-  }
-
-  const handleSort = (selectedOption)=>{
-    sortItems(selectedOption)
-  }
+export default function CardContainer({addToCart, sortedItems, productType}) {
 
   return (
     <>
-    <section className='mx-1'>
-      <Dropdown className='mt-3 text-center' onSelect={handleSelect}>
-        <Dropdown.Toggle variant='success'>Filter Products</Dropdown.Toggle>
-        <Dropdown.Menu className='text-center'>
-          <Dropdown.Item eventKey="all">All</Dropdown.Item>
-          <Dropdown.Item eventKey="fruit" >Fruits</Dropdown.Item>
-          <Dropdown.Item eventKey="vegetable">Vegetables</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-
-      <Dropdown className='mt-3 text-center' onSelect={handleSort}>
-        <Dropdown.Toggle variant='success'>Sort Products</Dropdown.Toggle>
-        <Dropdown.Menu className='text-center'>
-          <Dropdown.Item eventKey="A-Z">A - Z</Dropdown.Item>
-          <Dropdown.Item eventKey="Z-A" >Z - A</Dropdown.Item>
-          <Dropdown.Item eventKey="price_asc">Price : low to high</Dropdown.Item>
-          <Dropdown.Item eventKey="price_desc">Price : high to low</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    </section>
 
     <section
       className="col-md-8 column-gap-2 d-flex flex-wrap "
@@ -79,13 +32,13 @@ export default function CardContainer({addToCart}) {
         productType ===  "all" ?
           sortedItems.map((product,index)=>{
           return(
-            <Cards key={index} link={product.img} title={product.title} price={product.price} addToCart={()=>addToCart(product)} product={product}/>
+            <Cards key={index} link={product.img} title={product.title} price={product.price} addToCart={()=>addToCart(product)}/>
           )
           })
         : 
         sortedItems.filter((item)=> item.category === productType).map((product,index)=>{
           return(
-            <Cards key={index} link={product.img} title={product.title} price={product.price} addToCart={()=>addToCart(product)} product={product}/>
+            <Cards key={index} link={product.img} title={product.title} price={product.price} addToCart={()=>addToCart(product)}/>
           )
         })
       }
@@ -105,5 +58,7 @@ Cards.propTypes = {
 }
 CardContainer.propTypes = {
   cartItem : PropTypes.string,
-  addToCart : PropTypes.any
+  addToCart : PropTypes.any,
+  sortedItems : PropTypes.any,
+  productType : PropTypes.any
 }
