@@ -13,17 +13,27 @@ export default function App() {
   const [toastList, setToastList] = useState([])
   const [productType, setProductType] = useState("all");
   const [sortedItems, setSortedItems] = useState([...data.productData])
+  const [filterItem,setFilterItem] = useState(false)
+  const [filterPrice, setFilterPrice] = useState(false)
+  const [filterCategory, setFilterCategory] = useState(false)
+
 
   const sortItems = (eventKey) => {
     let sortedItemsCopy = [...sortedItems];
-    if (eventKey === "A-Z") {
-      sortedItemsCopy.sort((a, b) => a.title > b.title ? 1 : -1);
-    }else if (eventKey === "Z-A"){
-      sortedItemsCopy.sort((a, b) => a.title > b.title ? -1 : 1);
-    }else if (eventKey === "price_asc") {
-      sortedItemsCopy.sort((a, b) => a.price - b.price);
-    } else if (eventKey === "price_desc") {
-      sortedItemsCopy.sort((a, b) => b.price - a.price);
+    if(eventKey === "title"){
+      const cartOrder = filterItem ? -1 : 1;
+      setFilterItem((filterItem)=>  !filterItem)
+      sortedItemsCopy.sort((a, b) =>  cartOrder * ( a.title.charCodeAt(0) - b.title.charCodeAt(0) ));
+    }else 
+     if(eventKey === "price"){
+      const cartOrder = filterPrice ? -1 : 1;
+      setFilterPrice((filterPrice)=>  !filterPrice)
+      sortedItemsCopy.sort((a, b) =>  cartOrder * ( a.price - b.price ));
+    }else 
+    if(eventKey === "category"){
+      const cartOrder = filterCategory ? -1 : 1;
+      setFilterCategory((filterCategory)=>  !filterCategory)
+      sortedItemsCopy.sort((a, b) =>  cartOrder * ( a.category.charCodeAt(0) - b.category.charCodeAt(0) ));
     }
 
     setSortedItems(sortedItemsCopy);
@@ -90,7 +100,7 @@ export default function App() {
        ))}
       </ToastContainer>
 
-      <NavBar handleSort={handleSort} handleSelect={handleSelect} cartProduct={cartProduct}/>
+      <NavBar handleSort={handleSort} handleSelect={handleSelect} cartProduct={cartProduct} filterItem={filterItem} filterPrice={filterPrice} filterCategory={filterCategory}/>
       <main className="d-flex">
         <CardContainer addToCart={addToCart} sortedItems={sortedItems} handleSort={handleSort} productType={productType}/>
         <Aside cartProduct={cartProduct} addToCart={addToCart} removeFromCart={removeFromCart}/>

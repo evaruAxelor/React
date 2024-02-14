@@ -5,10 +5,12 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover'
 import { NavDropdown} from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
-import { MdOutlineShoppingCart } from "react-icons/md";
 import { Cart } from './Aside';
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { FaArrowUp } from "react-icons/fa";
+import { FaArrowDown } from "react-icons/fa";
 
-export default function NavBar({handleSort, handleSelect, cartProduct}) {
+export default function NavBar({handleSort, handleSelect, cartProduct, filterItem, filterPrice, filterCategory}) {
 
   const popoverBottom = (
     <Popover id="popover-positioned-bottom" title="Popover bottom" className="w-100">
@@ -27,12 +29,21 @@ export default function NavBar({handleSort, handleSelect, cartProduct}) {
             <Nav.Link onClick={()=>handleSelect("fruit")} >Fruits</Nav.Link>
             <Nav.Link onClick={()=>handleSelect("vegetable")} >Vegetables</Nav.Link>
             <NavDropdown title="Sort" id="navbarScrollingDropdown" onSelect={handleSort} >
-              <NavDropdown.Item eventKey="title">title</NavDropdown.Item>
-              <NavDropdown.Item eventKey="A-Z">A-Z</NavDropdown.Item>
-              <NavDropdown.Item eventKey="Z-A">Z-A</NavDropdown.Item>
-              <NavDropdown.Item eventKey="price_asc">low - high</NavDropdown.Item>
-              <NavDropdown.Item eventKey="price_desc">high - low</NavDropdown.Item>
-              {/* <NavDropdown.Item href="#action5">By Category</NavDropdown.Item> */}
+            {
+              filterItem === false ? <NavDropdown.Item eventKey="title" >Title <FaArrowUp /></NavDropdown.Item> 
+              : <NavDropdown.Item eventKey="title" >Title <FaArrowDown /> </NavDropdown.Item>
+
+            }
+            {
+              filterPrice === false ? <NavDropdown.Item eventKey="price" >Price <FaArrowUp /></NavDropdown.Item> 
+              : <NavDropdown.Item eventKey="price" >Price <FaArrowDown /> </NavDropdown.Item>
+
+            }
+            {
+              filterCategory === false ? <NavDropdown.Item eventKey="category" >Category <FaArrowUp /></NavDropdown.Item> 
+              : <NavDropdown.Item eventKey="category" >Category <FaArrowDown /> </NavDropdown.Item>
+
+            }
               <NavDropdown.Divider />
               <NavDropdown.Item href='/'>Clear</NavDropdown.Item>
             </NavDropdown>
@@ -52,5 +63,9 @@ export default function NavBar({handleSort, handleSelect, cartProduct}) {
 NavBar.propTypes = {
   handleSort : PropTypes.any,
   handleSelect : PropTypes.any,
-  cartProduct : PropTypes.any
+  cartProduct : PropTypes.any,
+  filterItem : PropTypes.any,
+  filterPrice : PropTypes.any,
+  filterCategory : PropTypes.any
+
 }
