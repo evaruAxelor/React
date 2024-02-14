@@ -90,7 +90,7 @@ export default function App() {
        ))}
       </ToastContainer>
 
-      <NavBar handleSort={handleSort} handleSelect={handleSelect}/>
+      <NavBar handleSort={handleSort} handleSelect={handleSelect} cartProduct={cartProduct}/>
       <main className="d-flex">
         <CardContainer addToCart={addToCart} sortedItems={sortedItems} handleSort={handleSort} productType={productType}/>
         <Aside cartProduct={cartProduct} addToCart={addToCart} removeFromCart={removeFromCart}/>
