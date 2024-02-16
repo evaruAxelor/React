@@ -1,254 +1,152 @@
-import { useReducer } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
+import { useRef } from "react"; 
+import "./index.css";
+import { Input } from "./Components/Input";
+import Button from "./Components/Button";
+import Option from "./Components/Option";
 
-export default function App() {
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "HANDLE INPUT":
-        return {
-          ...state,
-          [action.field]: action.value,
-        };
-      case "TOGGLE":
-        return {
-          ...state,
-          isMail: !state.isMail,
-        };
-      case "TOGGLE-2":
-        return {
-          ...state,
-          isPayroll: !state.isPayroll,
-        };
-      case "TOGGLE-3":
-        return {
-          ...state,
-          isSelfService: !state.isSelfService,
-        };
-      case "CLEAR":
-        return {
-          [action.field]: "",
-        };
-      default:
-        return state;
-    }
-  };
+const SERVERS = ["apache", "oracle", "nginx"];
 
-  const initials = {
-    username: "",
-    password: "",
-    city: "",
-    webserver: "",
-    role: "",
-    isMail: false,
-    isPayroll: false,
-    isSelfService: false,
-  };
-
-  const [inputs, dispatch] = useReducer(reducer, initials);
-
-  const errors = () => {
-    let uName = document.querySelector("#username").value;
-    let pass = document.querySelector("#password").value;
-
-    const passed = /^(?=.*\d)[A-Za-z0-9]{8,}$/;
-    let password = passed.test(pass);
-
-    if (uName === "" || uName === " ") {
-      document.querySelector("#e1").innerHTML = "Username is required !";
-    } else {
-      document.querySelector("#e1").innerHTML = "";
-    }
-
-    if (pass === "" || pass === " ") {
-      document.querySelector("#e2").innerHTML = "Password is required !";
-    } else if (!password) {
-      document.querySelector("#e2").innerHTML =
-        "Password must have 8 characters and at least 1 digit";
-    } else {
-      document.querySelector("#e2").innerHTML = "";
-    }
-  };
-
+function App() {
+  
+  const formRef = useRef();
+  const [credentials, setCredentials] = useState({});
+  const [errors, setErrors] = useState({});
+  const [success,setSuccess] = useState("")
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch({
-      type: "HANDLE INPUT",
-      field: e.target.name,
-      value: e.target.value,
-    });
-    errors();
-    if (
-      inputs.username &&
-      inputs.password &&
-      inputs.city &&
-      inputs.webserver &&
-      inputs.role
-    ) {
-      console.log(inputs);
-      document.querySelector("#success").innerHTML =
-        "Form submitted successfully!!";
-      dispatch({
-        type: "CLEAR",
-      });
+    const regex = /^(?=.*\d)[A-Za-z0-9]{8,}$/;
+    const { username, password } = credentials;
+    if (!username) {
+      setErrors((error) => ({ ...error, username: "Username is required !" }));
     }
+    if (!password) {
+      return setErrors((error) => ({
+        ...error,
+        password: "Password is required !",
+      }));
+    }
+    if (!regex.test(password)) {
+      setErrors({
+        ...errors,
+        password: "Password must have 8 characters & at least 1 digit",
+      });
+    } else {
+      setErrors({ ...errors, password: "" });
+      setSuccess("Form submitted successfully !!")
+      formRef.current.reset()
+    }
+    
   };
+  
+  const handleReset =()=>{
+    formRef.current.reset()
+  }
+
+  useEffect(()=>{
+    setErrors({});
+  },[credentials])
 
   return (
-    <>
-      <div className="form-container">
-        <h2 style={{ marginLeft: "20px", marginTop: "20px" }}>Form</h2>
-        <form action="" style={{ padding: "20px" }} onSubmit={handleSubmit}>
-          <table>
-            <tr>
-              <td>
-                <label htmlFor="username">Username : </label>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  value={inputs.username || ""}
-                  onChange={(e) => handleSubmit(e)}
-                />
-                <span id="e1"></span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label htmlFor="password">Password : </label>
-              </td>
-              <td>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={inputs.password || ""}
-                  onChange={(e) => handleSubmit(e)}
-                />
-                <span id="e2"></span>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label htmlFor="city">City of Employment : </label>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={inputs.city || ""}
-                  onChange={(e) => handleSubmit(e)}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label htmlFor="webserver">Web Server : </label>
-              </td>
-              <td>
-                <select
-                  name="webserver"
-                  id="webserver"
-                  value={inputs.webserver || ""}
-                  onChange={(e) => handleSubmit(e)}
-                >
-                  <option value="apache">Apache</option>
-                  <option value="nginx">Nginx</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label htmlFor="role">PLease Specify your role : </label>
-              </td>
-              <td>
-                <input
-                  type="radio"
-                  name="role"
-                  value="admin"
-                  checked={inputs.role === "admin"}
-                  onChange={(e) => handleSubmit(e)}
-                />
-                Admin
-                <br />
-                <input
-                  type="radio"
-                  name="role"
-                  value="engineer"
-                  checked={inputs.role === "engineer"}
-                  onChange={(e) => handleSubmit(e)}
-                />
-                Engineer <br />
-                <input
-                  type="radio"
-                  name="role"
-                  value="manager"
-                  checked={inputs.role === "manager"}
-                  onChange={(e) => handleSubmit(e)}
-                />
-                Manager <br />
-                <input
-                  type="radio"
-                  name="role"
-                  value="guest"
-                  checked={inputs.role === "guest"}
-                  onChange={(e) => handleSubmit(e)}
-                />
-                Guest
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label htmlFor="sign">Single sign on the following : </label>
-              </td>
-              <td>
-                <input
-                  type="checkbox"
-                  value="mail"
-                  checked={inputs.isMail}
-                  onChange={() => dispatch({ type: "TOGGLE" })}
-                />
-                Mail <br />
-                <input
-                  type="checkbox"
-                  value="payroll"
-                  checked={inputs.isPayroll}
-                  onChange={() => dispatch({ type: "TOGGLE-2" })}
-                />
-                Payroll <br />
-                <input
-                  type="checkbox"
-                  value="self-service"
-                  checked={inputs.isSelfService}
-                  onChange={() => dispatch({ type: "TOGGLE-3" })}
-                />
-                Self-service
-              </td>
-            </tr>
-            <tr>
-              <td style={{ textAlign: "right" }}>
-                <button type="submit" value="submit">
-                  Submit
-                </button>
-              </td>
-              <td>
-                <button
-                  type="reset"
-                  onClick={() => dispatch({ type: "CLEAR" })}
-                >
-                  Reset
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td colSpan={2}>
-                <p id="success"></p>
-              </td>
-            </tr>
-          </table>
+    <div className="App">
+        <h2>Form</h2>
+        <p id="success">{success}</p>
+      <div className="container">
+        <form action="" method="post" onSubmit={handleSubmit} ref={formRef}>
+          <div className="items">
+            <Input
+              label="Username"
+              type="text"
+              id="username"
+              name="username"
+              onChange={(e) =>
+                setCredentials({ ...credentials, username: e.target.value })
+              }
+              errors={errors}
+            />
+          </div>
+
+          <div className="items">
+            <Input
+              label="Password"
+              type="password"
+              id="password"
+              name="password"
+              errors={errors}
+              onChange={(e) =>
+                setCredentials({ ...credentials, password: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="items">
+            <Input
+              label="City of Employment"
+              type="text"
+              id="city"
+              name="city"
+              errors={errors}
+            />
+          </div>
+
+          <div className="items">
+            <label>Web server: </label>
+            <select name="server">
+              <option value="server">--Choose a server--</option>
+              {SERVERS.map((server,index) => (
+                <Option key={index} >{server}</Option>
+              ))}
+            </select>
+          </div>
+
+          <div className="check">
+            <label>Please specify your role: </label>
+            <div className="box">
+              <div className="items">
+                <input type="radio" name="role" id="adm" /> &nbsp;
+                <label>Admin</label>
+              </div>
+              <div className="items">
+                <input type="radio" name="role" id="eng" /> &nbsp;
+                <label>Engineer</label>
+              </div>
+              <div className="items">
+                <input type="radio" name="role" id="Manager" /> &nbsp;
+                <label>Manager</label>
+              </div>
+              <div className="items">
+                <input type="radio" name="role" id="guest" /> &nbsp;
+                <label>Guest</label>
+              </div>
+            </div>
+          </div>
+          <div className="check">
+            <label htmlFor="sign-on"> Single Sign-on to the following: </label>
+            <div className="box">
+              <div className="items">
+                <input type="checkbox" name="admin" id="admin" /> &nbsp;
+                <label htmlFor="admin">Admin</label>
+              </div>
+              <div className="items">
+                <input type="checkbox" name="Payroll" id="Payroll" /> &nbsp;
+                <label htmlFor="Payroll">Payroll</label>
+              </div>
+              <div className="items">
+                <input type="checkbox" name="Self-service" id="Self-service" /> &nbsp;
+                <label htmlFor="Self-service">Self-service</label>
+              </div>
+            </div>
+          </div>
+          <div className="btn">
+            <Button type="submit">Submit</Button>
+            <input type="button" value="Reset" className="button" onClick={handleReset}/>
+          </div>
         </form>
       </div>
-    </>
+    </div>
   );
 }
+
+export default App;

@@ -1,20 +1,102 @@
-.form-container{
-    margin: auto;
-    border: 1px solid black;
-    width: 30%;
-    margin-top: 200px;
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  font-family: "Raleway", sans-serif;
 }
-input{
-    margin-bottom: 5px;
+
+#success {
+  color: rgb(35, 136, 35);
+  padding: 5px 4px;
+  align-self: center;
+  width: 23%;
+  text-align: center;
 }
-span{
-    color: red;
-    font-size: 10px;
-    margin-left: 3px;
+
+.container {
+  width: 470px;
+  height: auto;
+  padding: 15px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
-#success{
-    background-color : #36b35f;
-    width: 100%;
-    color: white;
-    margin-top: 10px;
+
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 1px;
+}
+
+.items {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  padding: 1px;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.check label {
+  width: 50%;
+}
+
+.check .box {
+  display: flex;
+  justify-items: start;
+  flex-direction: column;
+  width: 180px;
+}
+
+.check {
+  display: flex;
+  justify-content: space-between;
+}
+
+.check .box .items {
+  display: block;
+}
+
+.check,
+.items {
+  margin-bottom: 15px;
+}
+
+.box > .items {
+  margin: 0px;
+}
+
+.box,
+select {
+  margin-right: 45px;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  padding: 15px;
+}
+
+.error {
+  position: absolute;
+  bottom: -33px;
+  right: 0;
+  font-size: 12px;
+  color: red;
+}
+
+.input {
+  border-radius: 5px;
+  width: 250px;
+  border: 1px solid black;
+}
+.button {
+  width: 75px;
+  height: 30px;
+  outline: none;
+  border: none;
+  background-color: rgb(0, 0, 0);
+  color: white;
+  border-radius: 4px;
 }
