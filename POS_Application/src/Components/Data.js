@@ -108,4 +108,20 @@ const data = {
     ]
   }
 
-  export default data;
+const filterData = [
+    {
+      id: 1,
+      name: "title",
+    },
+    {
+      id: 2,
+      name: "price",
+    },
+    {
+      id: 3,
+      name: "category",
+    },
+];
+  
+export { data, filterData };
+  
