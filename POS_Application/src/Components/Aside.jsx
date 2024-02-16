@@ -12,7 +12,7 @@ export function Cart({cartProduct, addToCart, removeFromCart}) {
   return (
     <>
     {cartProduct.length === 0 ? <Alert variant="warning">Cart is Empty</Alert> :  (
-      <ol className="list-group list-group-numbered col-md-9">
+      <ol className="list-group list-group-numbered col-md-12">
           {cartProduct.map((item,index)=>(
               <li key={index} className="d-flex justify-content-between align-items-center list-group-item">
                 <div className="ms-2 me-auto">

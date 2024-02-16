@@ -27,10 +27,10 @@ export default function NavBar({handleSort, handleSelect, cartProduct, filter,fi
     <>
       <Navbar bg="dark" data-bs-theme="dark">
           <Navbar.Brand href="/" className='mx-1'>Grocery Store</Navbar.Brand>
-          <Nav className="me-auto mx-1">
-            <Nav.Link onClick={()=>handleSelect("all")} >All</Nav.Link>
-            <Nav.Link onClick={()=>handleSelect("fruit")} >Fruits</Nav.Link>
-            <Nav.Link onClick={()=>handleSelect("vegetable")} >Vegetables</Nav.Link>
+          <Nav defaultActiveKey={9} className="me-auto mx-1">
+            <Nav.Link onClick={()=>handleSelect("all") } eventKey={9} >All</Nav.Link>
+            <Nav.Link onClick={()=>handleSelect("fruit")} eventKey={8}  >Fruits</Nav.Link>
+            <Nav.Link onClick={()=>handleSelect("vegetable")} eventKey={7}>Vegetables</Nav.Link>
             <NavDropdown title="Sort" id="navbarScrollingDropdown" onSelect={handleSort} >
             {
               filterData.map((item)=>(
@@ -58,7 +58,7 @@ export default function NavBar({handleSort, handleSelect, cartProduct, filter,fi
             </NavDropdown>
           </Nav>
 
-         <OverlayTrigger trigger="click" placement="bottom" overlay={popoverBottom}>
+         <OverlayTrigger trigger="click" placement="bottom" overlay={popoverBottom} rootClose>
          <Button className='bg-transparent border-0 text-lg-center'>
             <MdOutlineShoppingCart className='text-white mx-5 position-relative text-black opacity-50' size={40} />
             <p className='bg-danger text-sm-center rounded-4 px-2 position-absolute end-0 top-0 mx-5 mt-1 text-sm-start '>{cartProduct.length}</p> 
