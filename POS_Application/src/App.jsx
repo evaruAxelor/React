@@ -1,54 +1,58 @@
+import { useState } from "react";
+import { useEffect } from "react";
+import Toast from 'react-bootstrap/Toast';
+import ToastContainer from 'react-bootstrap/ToastContainer';
 import Aside from "./Components/Aside"
 import CardContainer from "./Components/CardContainer";
 import NavBar from "./Components/NavBar";
-import Toast from 'react-bootstrap/Toast';
-import ToastContainer from 'react-bootstrap/ToastContainer';
-import { useState } from "react";
-import data from "./Components/Data";
-
+import {data, filterData} from "./Components/Data";
 
 export default function App() {
+
+  const allData = data.productData
 
   const [cartProduct, setCartProduct] = useState([])
   const [toastList, setToastList] = useState([])
   const [productType, setProductType] = useState("all");
-  const [sortedItems, setSortedItems] = useState([...data.productData])
-  const [filterItem,setFilterItem] = useState(false)
-  const [filterPrice, setFilterPrice] = useState(false)
-  const [filterCategory, setFilterCategory] = useState(false)
+  const [sortedItems, setSortedItems] = useState(allData)
+  const [filter, setFilter] = useState(false)
 
 
-  const sortItems = (eventKey) => {
+const sortItems = (eventKey) => {
     let sortedItemsCopy = [...sortedItems];
-    if(eventKey === "title"){
-      const cartOrder = filterItem ? -1 : 1;
-      setFilterItem((filterItem)=>  !filterItem)
-      sortedItemsCopy.sort((a, b) =>  cartOrder * ( a.title.charCodeAt(0) - b.title.charCodeAt(0) ));
-    }else 
-     if(eventKey === "price"){
-      const cartOrder = filterPrice ? -1 : 1;
-      setFilterPrice((filterPrice)=>  !filterPrice)
-      sortedItemsCopy.sort((a, b) =>  cartOrder * ( a.price - b.price ));
-    }else 
-    if(eventKey === "category"){
-      const cartOrder = filterCategory ? -1 : 1;
-      setFilterCategory((filterCategory)=>  !filterCategory)
-      sortedItemsCopy.sort((a, b) =>  cartOrder * ( a.category.charCodeAt(0) - b.category.charCodeAt(0) ));
-    }
+
+    filterData.map((item)=>{
+      if(eventKey === item.name){
+        const cartOrder = filter ? -1 : 1;
+        setFilter((filter) => !filter)
+        if(eventKey === "title"){
+          sortedItemsCopy.sort((a, b) => (
+            cartOrder * ( a.title.localeCompare(b.title) )))
+        }
+        else if(eventKey === "category" ){
+          sortedItemsCopy.sort((a, b) => (
+            cartOrder * ( a.category.localeCompare(b.category) )))
+        }
+       else{
+          sortedItemsCopy.sort((a, b) => (
+            cartOrder * ( a.price - b.price)))
+        }
+      }
+    })
 
     setSortedItems(sortedItemsCopy);
-  };
+};
 
-  const handleSelect=(eventKey)=>{
+const handleSelect=(eventKey)=>{
      setProductType(eventKey)
-  }
+}
 
-  const handleSort = (selectedOption)=>{
+const handleSort = (selectedOption)=>{
     sortItems(selectedOption)
-  }
+}
 
 
-  const addToCart = (product) =>{
+const addToCart = (product) =>{
     setToastList((prev)=>[...prev,product.title])
     
     const existingItem = cartProduct.find((item)=> item.title === product.title)
@@ -66,9 +70,9 @@ export default function App() {
     setTimeout(()=>{
       setToastList((prev)=>prev.filter((product,index)=> index !== 0))
     },3000)
-  }
+}
   
-  const removeFromCart = (item) =>{
+const removeFromCart = (item) =>{
 
     const existingItem = cartProduct.find((i)=> i.id === item.id)
 
@@ -84,7 +88,19 @@ export default function App() {
       setCartProduct((prev)=>prev.filter((item)=>item.id!==existingItem.id))
     }
 
-  }
+}
+
+useEffect(()=>{
+        const cartProduct = JSON.parse(localStorage.getItem("cartProducts"))
+
+        if(cartProduct && cartProduct.length > 0){
+          setCartProduct(cartProduct)
+        }
+},[])
+
+useEffect(()=>{
+      localStorage.setItem("cartProducts", JSON.stringify(cartProduct))
+},[cartProduct])
 
   return (
     <>
@@ -100,7 +116,7 @@ export default function App() {
        ))}
       </ToastContainer>
 
-      <NavBar handleSort={handleSort} handleSelect={handleSelect} cartProduct={cartProduct} filterItem={filterItem} filterPrice={filterPrice} filterCategory={filterCategory}/>
+      <NavBar handleSort={handleSort} handleSelect={handleSelect} cartProduct={cartProduct} filter={filter} filterData={filterData}/>
       <main className="d-flex">
         <CardContainer addToCart={addToCart} sortedItems={sortedItems} handleSort={handleSort} productType={productType}/>
         <Aside cartProduct={cartProduct} addToCart={addToCart} removeFromCart={removeFromCart}/>
