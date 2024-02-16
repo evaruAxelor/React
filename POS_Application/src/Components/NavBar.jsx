@@ -1,16 +1,19 @@
+import PropTypes from "prop-types"
+import { useState } from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import PropTypes from "prop-types"
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'; 
 import Popover from 'react-bootstrap/Popover'
 import { NavDropdown} from 'react-bootstrap';
 import { Button } from 'react-bootstrap';
-import { Cart } from './Aside';
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { FaArrowUp } from "react-icons/fa";
 import { FaArrowDown } from "react-icons/fa";
+import { Cart } from './Aside';
 
-export default function NavBar({handleSort, handleSelect, cartProduct, filterItem, filterPrice, filterCategory}) {
+export default function NavBar({handleSort, handleSelect, cartProduct, filter,filterData}) {
+
+  const [active,setActive]=useState(null)
 
   const popoverBottom = (
     <Popover id="popover-positioned-bottom" title="Popover bottom" className="w-100">
@@ -30,19 +33,25 @@ export default function NavBar({handleSort, handleSelect, cartProduct, filterIte
             <Nav.Link onClick={()=>handleSelect("vegetable")} >Vegetables</Nav.Link>
             <NavDropdown title="Sort" id="navbarScrollingDropdown" onSelect={handleSort} >
             {
-              filterItem === false ? <NavDropdown.Item eventKey="title" >Title <FaArrowUp /></NavDropdown.Item> 
-              : <NavDropdown.Item eventKey="title" >Title <FaArrowDown /> </NavDropdown.Item>
-
-            }
-            {
-              filterPrice === false ? <NavDropdown.Item eventKey="price" >Price <FaArrowUp /></NavDropdown.Item> 
-              : <NavDropdown.Item eventKey="price" >Price <FaArrowDown /> </NavDropdown.Item>
-
-            }
-            {
-              filterCategory === false ? <NavDropdown.Item eventKey="category" >Category <FaArrowUp /></NavDropdown.Item> 
-              : <NavDropdown.Item eventKey="category" >Category <FaArrowDown /> </NavDropdown.Item>
-
+              filterData.map((item)=>(
+                <NavDropdown.Item key={item.id} eventKey={item.name} 
+                onClick={
+                ()=>{
+                  setActive(item);
+                }
+                }>
+                {item.name}{" "}
+                {
+                  active?.id === item.id ? 
+                    filter === true ?
+                   ( <FaArrowDown /> ) 
+                   : filter === false ?
+                    ( <FaArrowUp /> )
+                   : ""
+                   : ""
+                }
+                 </NavDropdown.Item>
+              ))
             }
               <NavDropdown.Divider />
               <NavDropdown.Item href='/'>Clear</NavDropdown.Item>
@@ -64,8 +73,6 @@ NavBar.propTypes = {
   handleSort : PropTypes.any,
   handleSelect : PropTypes.any,
   cartProduct : PropTypes.any,
-  filterItem : PropTypes.any,
-  filterPrice : PropTypes.any,
-  filterCategory : PropTypes.any
-
+  filter : PropTypes.any,
+  filterData : PropTypes.array
 }
